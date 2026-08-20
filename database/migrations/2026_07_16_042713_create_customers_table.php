@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            // code membuat nama product untuk field dalam table products
-            $table->string('name');
-            $table->integer('price');
-            $table->string('size');
-            $table->text('description');
+            $table->string('company_name');
+            $table->string('contact_name');
+            $table->string('address');
+            $table->string('city');
+            $table->string('postal_code');
+            $table->string('country');
+            $table->string('phone');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('customers');
     }
 };

@@ -17,6 +17,6 @@ class Stock extends Model
 
     // registrasi nama relasi table stocks ketable products
     public function product() {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(Product::class);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,13 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            // code membuat nama product untuk field dalam table products
-            $table->string('name');
+            $table->foreignIdFor(Customer::class)->nullable();
+            $table->foreignIdFor(User::class)->nullable();
+            $table->integer('quantity');
+            $table->string('kode_invoice');
             $table->integer('price');
-            $table->string('size');
-            $table->text('description');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('orders');
     }
 };

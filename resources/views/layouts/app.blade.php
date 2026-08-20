@@ -13,8 +13,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <script src="{{ asset('js/stateListProduct.js') }}"></script>
     <script src="{{ asset('js/helper.js') }}"></script>
-    <script src="{{ asset('js/demoStateListProduct.js') }}"></script>
-    <script src="{{ asset('js/demoHelperFun.js') }}"></script>
+    <script src="{{asset('js/stateCashier.js')}} "></script>
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -23,6 +22,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('scripts')
 </head>
 
 <body class="font-sans antialiased">

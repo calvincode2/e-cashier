@@ -25,7 +25,7 @@ class AdminController extends Controller
                 'name'          => $product->name,
                 'size'          => $product->size,
                 'quantity'      => optional($product->stocks->first())->quantity ?? 0,
-                'description'   => $product->description
+                'description'   => $product->description,
             ];
 
             // mengembalikan data response berbentuk json
@@ -77,11 +77,10 @@ class AdminController extends Controller
             $validated = $validator->validated();
 
             // melakukan insert data kedalam table products
-            $product = DB::table('products')->insert([
+            DB::table('products')->insert([
                 'name' =>  $validated['name'],
                 'size' => $validated['size'],
                 'price' => $validated['price'],
-                // 'quantity' => $validated['quantity'],
                 'description' => $validated['description'],
             ]);
 
@@ -152,12 +151,14 @@ class AdminController extends Controller
                     'id'            => $product->id,
                     'name'          => $product->name,
                     'size'          => $product->size,
-                    'quantity'      => optional($product->stocks->first())->quantity ?? 0,
                     'price'         => $product->price,
                     'description'   => $product->description,
+                    'stocks' => [
+                        'quantity' => optional($product->stocks->first())->quantity ?? 0,
+                        'status' => optional($product->stocks->first())->status,
+                    ],
                 ];
             });
-
 
             // mengembalikan data product berbentuk response json
             return response()->json([
@@ -172,100 +173,11 @@ class AdminController extends Controller
         }
     }
 
-    // fungsi untuk melakukan logic bisnis penyimpanan data baru ke database
-    public function demoStoreDataProduct(Request $request)
-    {
-        try {
-            // melakukan validasi inputan yang dikiirm dari FE
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:products|min:3',
-                'quantity' => 'required',
-                'price' => 'required',
-                'size' => 'required',
-                'description' => 'required|min:5',
-            ], [
-                'name.required' => 'Nama produk wajib diisi',
-                'name.unique'   => 'Nama produk sudah digunakan',
-                'name.min'      => 'Nama minimal 3 karaktek',
-                'quantity'      => 'Jumlah Produk wajib dipilih',
-                'price'         => 'Harga Produk wajib diisi',
-                'size'          => 'Ukuran Produk wajib dipilih',
-                'description'   => 'Keterangan Produk wajib diisi',
-            ]);
-
-            // pengecekan jika data yang dcek tidak valid
-            if ($validator->fails()) {
-
-                // mengirimkan response pesan error ke FE
-                return response()->json([
-                    'errors'   => $validator->errors()
-                ], 422);
-            }
-
-            // mengambil data yang dikirim kedalam variable array
-            $validated = $validator->validated();
-
-            // menyimpan data kedalam table products
-            DB::insert('INSERT INTO products
-                (name, price, size, description, created_at) values (?, ?, ?, ?, ?)', [
-                $validated['name'],
-                $validated['price'],
-                $validated['size'],
-                $validated['description'],
-                now()
-            ]);
-
-            // mengambil id product terakhir yang baru dibuat
-            $productId = DB::getPdo()->lastInsertId();
-
-            // menyimpan stock product
-            DB::insert('INSERT INTO stocks
-                (product_id, quantity, status, created_by, created_at) values (?, ?, ?, ?, ?)', [
-                $productId,
-                $validated['quantity'],
-                'in-stock',
-                auth()->user()->name,
-                now()
-            ]);
-
-            // mengembalikan response berhasil menyimpan data baru
-            return response()->json([
-                'message'   => 'data produk berhasil disimpan..',
-            ], 201);
-        } catch (\Exception $error) {
-            // mengembalikan pesan error internal server error
-            return response()->json([
-                'message'   => $error->getMessage()
-            ], 500);
-        }
-    }
-
-    // function untuk melakukan penghapusn dat produk
-    public function demoDeleteProduct($productId)
-    {
-        try {
-            DB::transaction(function () use ($productId) {
-                // menghapus data stock
-                DB::table('stocks')->where('product_id', $productId)->delete();
-
-                // menghapus data produk
-                DB::table('products')->where('id', $productId)->delete();
-            });
-
-            return response()->json([
-                'message'    => 'data produk berhasil dihapus..'
-            ], 200);
-        } catch (\Exception $error) {
-            return response()->json([
-                'message'    => $error->getMessage()
-            ], 500);
-        }
-    }
-
     public function getProduct(string $productId)
     {
         try {
-            $selectColoum = [
+            // menyeleksi kolom yang akan ditampilkan
+            $selectColum = [
                 'products.id as product_id',
                 'products.name as product_name',
                 'products.price as product_price',
@@ -277,21 +189,21 @@ class AdminController extends Controller
                 'stocks.status as stock_status',
                 'stocks.created_by as stock_created_by'
             ];
-
+            // mengambil data product kedalam table products melalui model Product
             $dataProduct = DB::table('products')
                 ->leftJoin('stocks', 'products.id', '=', 'stocks.product_id')
                 ->where('stocks.status', 'in-stock')->orderByDesc('stocks.created_at')
-                ->select($selectColoum)
-                ->where('products.id', $productId)
-                ->first();
-
+                ->select($selectColum)
+                ->where('products.id', $productId)->first();
+            // mengembalikan data product ke FE seperti yang diharapkan
             return response()->json([
-                'message' => 'get product successfully',
-                'response' => $dataProduct
+                'message'   => 'get product succcessfuly',
+                'response'  => $dataProduct
             ], 200);
         } catch (\Exception $error) {
+            // mengembalikan response berbentuk json ketika ada error typo nama table yg digunakan
             return response()->json([
-                'error' => $error->getMessage()
+                'error'   => $error->getMessage()
             ], 500);
         }
     }
@@ -321,7 +233,9 @@ class AdminController extends Controller
 
             $validated = $validator->validated();
 
-            $stock = Stock::where('id', $stockId)->first();
+            $stock = Stock::where('product_id', $validated['product_id'])
+                ->where('status', 'in-stock')
+                ->first();
 
             if (!$stock) {
                 return response()->json([

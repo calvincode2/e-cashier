@@ -78,8 +78,9 @@ function stateListProduct() {
         },
 
         async btnRestock(productId) {
-            try {
+            try {console.log("productId =", productId);
                 let result = await axios.get(`product/${productId}/edit`)
+                console.log(result.data.response);
                 let data = result.data.response
                 data.stock_status = 're-stock'
                 data.new_quantity = ''
@@ -101,7 +102,8 @@ function stateListProduct() {
                     status: this.receivedProduct.stock_status,
                     product_id: this.receivedProduct.product_id
                 }
-
+console.log(productId);
+console.log(this.receivedProduct);
                 let result = await axios.post(`product/${productId}/restock`, data)
                 this.isProcessSubmit = false
                 this.getListProduct()

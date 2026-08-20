@@ -47,8 +47,11 @@
                      </td>
                      <td class="px-6 py-4">
                          {{-- start pengecekan jumlah stok produk --}}
-                         <button x-on:click="btnRestock(product.id)" x-text="product.quantity ? product.quantity : 'tidak ada stok'"
-                         type="button" class="font-medium text-fg-brand hover:underline"></button>
+                         <button x-on:click="btnRestock(product.id)"
+                             x-text="product.stocks.quantity || 0"
+                             :class="product.stocks.quantity ? 'text-fg-brand hover:underline' : 'text-gray-400'"
+                             type="button" class="font-medium text-fg-brand hover:underline">
+                         </button>
                          {{-- end pengecekan jumlah stok produk --}}
                      </td>
                      <td class="px-6 py-4 gap-2 text-right inline-flex">

@@ -24,11 +24,11 @@
             <!-- Form -->
             <form method="POST" @submit.prevent="sendRestockProduct(receivedProduct.stock_id)">
 
-                <div class="grid gap-4 grid-cols-2 py-4 md:py-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 md:py-6">
 
                     <!-- Nama Produk -->
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block mb-2.5 text-sm font-medium text-heading">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-heading">
                             Nama Produk
                         </label>
 
@@ -36,12 +36,12 @@
                             type="text"
                             x-model="receivedProduct.product_name"
                             readonly
-                            class="bg-gray-200 border border-default-medium text-heading text-sm rounded-base block w-full px-3 py-2.5 cursor-not-allowed">
+                            class="w-full px-3 py-2.5 text-sm rounded-base border border-default-medium bg-gray-200 cursor-not-allowed">
                     </div>
 
                     <!-- Ukuran Produk -->
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block mb-2.5 text-sm font-medium text-heading">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-heading">
                             Ukuran Produk
                         </label>
 
@@ -49,12 +49,12 @@
                             type="text"
                             x-model="receivedProduct.product_size"
                             readonly
-                            class="bg-gray-200 border border-default-medium text-heading text-sm rounded-base block w-full px-3 py-2.5 cursor-not-allowed">
+                            class="w-full px-3 py-2.5 text-sm rounded-base border border-default-medium bg-gray-200 cursor-not-allowed">
                     </div>
 
                     <!-- Harga Produk -->
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block mb-2.5 text-sm font-medium text-heading">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-heading">
                             Harga Produk
                         </label>
 
@@ -62,50 +62,66 @@
                             type="text"
                             x-model="receivedProduct.product_price"
                             readonly
-                            class="bg-gray-200 border border-default-medium text-heading text-sm rounded-base block w-full px-3 py-2.5 cursor-not-allowed">
+                            class="w-full px-3 py-2.5 text-sm rounded-base border border-default-medium bg-gray-200 cursor-not-allowed">
                     </div>
 
-                    <!-- Stok Lama -->
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block mb-2.5 text-sm font-medium text-heading">
-                            Stok Saat Ini
+                    <!-- Status Stock -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-heading">
+                            Status Stock
                         </label>
 
-                        <select x-model="receivedProduct.stock_status">
+                        <select
+                            x-model="receivedProduct.stock_status"
+                            class="w-full px-3 py-2.5 text-sm rounded-base border border-default-medium">
+
                             <template x-for="status in listStatus" :key="status.value">
                                 <option :value="status.value" x-text="status.label"></option>
                             </template>
+
                         </select>
                     </div>
 
-                    <!-- Tambah Stok -->
-                    <div class="col-span-2">
-                        <label class="block mb-2.5 text-sm font-medium text-heading">
-                            Tambah Stok
+                    <!-- Jumlah Stock Saat Ini -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-heading">
+                            Jumlah Stock Saat Ini
+                        </label>
+
+                        <input
+                            type="number"
+                            x-model.number="receivedProduct.stock_quantity"
+                            readonly
+                            class="w-full px-3 py-2.5 text-sm rounded-base border border-default-medium bg-gray-200 cursor-not-allowed">
+                    </div>
+
+                    <!-- Tambah Stock -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-heading">
+                            Input Stock
                         </label>
 
                         <input
                             type="number"
                             x-model="receivedProduct.new_quantity"
-                            placeholder="Masukkan jumlah stok baru"
-                            class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base block w-full px-3 py-2.5 shadow-xs">
+                            placeholder="Masukkan jumlah stock"
+                            class="w-full px-3 py-2.5 text-sm rounded-base border border-default-medium">
                     </div>
 
                     <!-- Deskripsi -->
-                    <div class="col-span-2">
-                        <label class="block mb-2.5 text-sm font-medium text-heading">
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 text-sm font-medium text-heading">
                             Keterangan Produk
                         </label>
 
                         <textarea
                             rows="4"
                             readonly
-                            class="bg-gray-200 border border-default-medium text-heading text-sm rounded-base block w-full p-3.5 cursor-not-allowed"
-                            x-text="receivedProduct.product_description"></textarea>
+                            x-text="receivedProduct.product_description"
+                            class="w-full p-3 text-sm rounded-base border border-default-medium bg-gray-200 cursor-not-allowed"></textarea>
                     </div>
 
                 </div>
-
                 <!-- Button -->
                 <div class="inline-flex items-center space-x-2 pt-2 md:pt-6">
 
