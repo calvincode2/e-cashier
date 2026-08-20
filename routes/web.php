@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 // registrasi alamat file AdminController beserta dengan alamat folder
 use App\Http\Controllers\AdminController;
-
 // registrasi alamat file CashierController beserta dengan alamat folder
 use App\Http\Controllers\CashierController;
 /*
@@ -40,12 +39,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('store-product', [AdminController::class, 'storeProduct'])->name('store-product');
 
     // route untuk melakukan delete product dan stock
-    Route::delete('product/{productId}/delete')->name('product.delete');
-    
+    Route::delete('product/{productId}/delete', [AdminController::class, 'deleteProduct'])->name('product.delete');
+
     // jalur mengambil data product berdasarkan productId
     Route::get('data-product-by/{productId}', [AdminController::class, 'getProductById'])
         ->name('data-product-by');
 
+    Route::get('product/{productId}/edit', [AdminController::class, 'getProduct'])->name('product.edit');
+
+    Route::post('product/{productId}/restock', [AdminController::class, 'restockProduct'])->name('product.restock');
 
     // route untuk melakukan store data demo create produk
     Route::post('demo-store-product', [AdminController::class, 'demoStoreDataProduct'])->name('demo-store-product');
