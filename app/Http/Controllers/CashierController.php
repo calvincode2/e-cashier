@@ -40,7 +40,7 @@ class CashierController extends Controller
             }
             $validated = $validator->validated();
 
-            DB::transaction(function () use ($validated) {
+            $order = DB::transaction(function () use ($validated) {
                 // ambil semua produk id dan ubah jadi array
                 $productIds = collect($validated['order_product'])->pluck('product_id');
                 // ambil semua data lewat productIds
@@ -85,15 +85,21 @@ class CashierController extends Controller
                 }
 
                 OrderDetail::insert($data);
+                return $order;
             });
 
+            $data_response = [
+                'total_uang' => $validated['jumlah_uang'],
+                'kembalian' => $validated['jumlah_uang'] - $order->price
+            ];
 
             return response()->json([
-                'message' => 'transaksi berhasil'
+                'message' => 'transaksi berhasil',
+                'response' => $data_response
             ], 201);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th->getMessage()
+                'message' => $th->getMessage(),
             ], 500);
         }
     }

@@ -6,7 +6,7 @@ function stateCashierDashboard() {
 
         alertMessage: {list_product: '', success_order: '', warning_order: ''},
 
-        dataOrderProduct: {jumlah_uang: 0, order_product: [], type: 'website'},
+        dataOrderProduct: {jumlah_uang: 0, order_product: [], type: 'website', uang_kembalian: 0},
 
         total_pembayaran: 0,
 
@@ -80,15 +80,20 @@ function stateCashierDashboard() {
             try {
                 this.total_pembayaran = this.listProductOnCart.reduce((sum, product) => sum + (product.price * product.qty), 0)
                 this.alertMessage.warning_order = this.dataOrderProduct.jumlah_uang < this.total_pembayaran ? 'uang tidak cukup' : ''
-                this.dataOrderProduct.order_product   = this.listProductOnCart.map((productOrder) => ({
+                this.dataOrderProduct.order_product = this.listProductOnCart.map((productOrder) => ({
                     product_id: productOrder.id,
                     qty: productOrder.qty,
                     price:productOrder.price
                 }))
                 let result = await axios.post(`checkout-order`, this.dataOrderProduct)
-                console.log('data yang mau dikirim', result)
+                this.dataOrderProduct.uang_kembalian = result.data.response.kembalian
+                this.alertMessage.success_order = result.data.message
+                setTimeout(() => {
+                    this.alertMessage.success_order = result.data.message
+                }, 1500)
+                console.log('data yang mau dikirim', result.data.response.kembalian)
             } catch (error) {
-
+                console.log('error', error)
             }
 
         },

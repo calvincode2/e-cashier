@@ -1,4 +1,10 @@
 <div>
+    <template x-if="alertMessage.success_order">
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-400" role="alert">
+            <span class="font-medium" x-text="alertMessage.success_order"></span>
+        </div>
+    </template>
+
     <h2 class="mt-6 text-xl font-semibold">List Order</h2>
     <div class="relative overflow-x-auto">
         <table class="w-full text-sm text-left rtl:text-right text-body">
@@ -103,6 +109,18 @@
                                 x-on:click="btnBayar()">Bayar</button>
                         </td>
                     </tr>
+                    <template x-if="alertMessage.success_order">
+                        <tr class="font-semibold text-heading">
+                            <th scope="row" class="px-6 py-3 text-base">Uang Kembali</th>
+                            <td class="px-6 py-3">
+                                <div class="flex flex-col gap-1">
+                                    <input readonly x-model="dataOrderProduct.uang_kembalian"
+                                        class="cursor-not-allowed text-sm rounded-lg focus:ring-brand focus:border-brand block w-full px-3 py-2.5">
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+
                 </tfoot>
             </template>
         </table>
