@@ -2,6 +2,7 @@
 // penamaan alamat file didalam folder secara otomatis dibuat
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -293,7 +294,9 @@ class AdminController extends Controller
         }
     }
 
-    public function historyPage(){
-        return view("admin.history");
+    public function historyPage()
+    {
+        $orders = Order::with(["orderDetail"])->get();
+        return view("admin.history", compact('orders'));
     }
 }
