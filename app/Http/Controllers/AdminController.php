@@ -292,4 +292,8 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
+    public function historyPage(){
+        return view("admin.history");
+    }
 }

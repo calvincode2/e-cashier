@@ -79,7 +79,10 @@ function stateCashierDashboard() {
         async btnBayar(){
             try {
                 this.total_pembayaran = this.listProductOnCart.reduce((sum, product) => sum + (product.price * product.qty), 0)
-                this.alertMessage.warning_order = this.dataOrderProduct.jumlah_uang < this.total_pembayaran ? 'uang tidak cukup' : ''
+                if (this.dataOrderProduct.jumlah_uang < this.total_pembayaran) {
+                    this.alertMessage.warning_order = 'uang tidak cukup'
+                    return
+                }
                 this.dataOrderProduct.order_product = this.listProductOnCart.map((productOrder) => ({
                     product_id: productOrder.id,
                     qty: productOrder.qty,

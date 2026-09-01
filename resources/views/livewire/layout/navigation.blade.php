@@ -37,6 +37,11 @@ new class extends Component {
                         <x-nav-link :href="route('profits')" :active="request()->routeIs('profits')" wire:navigate>
                             {{ __('Pemasukkan') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('history')" :active="request()->routeIs('History')" wire:navigate>
+                            {{ __('History') }}
+                        </x-nav-link>
+
                     @elseif(auth()->user()->role === 'cashier')
                         <x-nav-link :href="route('cashier-dashboard')" :active="request()->routeIs('cashier-dashboard')" wire:navigate>
                             {{ __('Dashboard') }}

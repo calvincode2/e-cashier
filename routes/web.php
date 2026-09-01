@@ -31,6 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ====== ROUTE FOR ADMIN =======
     Route::get('admin-dashboard', [AdminController::class, 'index'])->name('admin-dashboard');
 
+    Route::get('history', [AdminController::class, 'historyPage'])->name('history');
+
     Route::view('profits', 'admin.profits.index')->name('profits');
     // route untuk mengambil list-product
     Route::get('list-product', [AdminController::class, 'getListProduct'])->name('list-product');

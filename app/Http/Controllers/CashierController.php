@@ -88,13 +88,34 @@ class CashierController extends Controller
                 return $order;
             });
 
+            $listProduct = Product::with(['stocks' => function ($query) {
+                $query->where('status', 'in-stock')->latest();
+            }])->get();
+
+            $product = $listProduct->map(function ($product) {
+                return [
+                    'id'            => $product->id,
+                    'name'          => $product->name,
+                    'size'          => $product->size,
+                    'price'         => $product->price,
+                    'description'   => $product->description,
+                    'stocks' => [
+                        'quantity' => optional($product->stocks->first())->quantity ?? 0,
+                        'status' => optional($product->stocks->first())->status,
+                    ],
+                ];
+            });
+
+            dd($product);
+
             $data_response = [
                 'total_uang' => $validated['jumlah_uang'],
-                'kembalian' => $validated['jumlah_uang'] - $order->price
+                'kembalian' => $validated['jumlah_uang'] - $order->price,
+                'product' => $product
             ];
 
             return response()->json([
-                'message' => 'transaksi berhasil',
+                'message' => 'transaksi berhasil calvin',
                 'response' => $data_response
             ], 201);
         } catch (\Throwable $th) {
