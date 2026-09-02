@@ -15,7 +15,8 @@ class Order extends Model
         'user_id',
         'kode_invoice',
         'price',
-        'type'
+        'type',
+        'cash'
     ];
     public function orderDetail()
     {
@@ -24,5 +25,9 @@ class Order extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function customer(){
+        return $this->belongsTo(Customer::class);
     }
 }

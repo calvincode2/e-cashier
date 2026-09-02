@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('kode_invoice');
             $table->integer('price');
+            $table->integer('cash');
             $table->string('type');
             $table->timestamps();
         });

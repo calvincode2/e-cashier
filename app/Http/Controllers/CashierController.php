@@ -61,7 +61,8 @@ class CashierController extends Controller
                     'user_id' => $validated['type'] == 'website' ? auth()->id() : null,
                     'kode_invoice' => Str::random(10),
                     'price' => $totalHarga,
-                    'type' => $validated['type']
+                    'type' => $validated['type'],
+                    'cash' => $validated['jumlah_uang'],
                 ]);
 
                 $data = [];
@@ -105,8 +106,6 @@ class CashierController extends Controller
                     ],
                 ];
             });
-
-            dd($product);
 
             $data_response = [
                 'total_uang' => $validated['jumlah_uang'],

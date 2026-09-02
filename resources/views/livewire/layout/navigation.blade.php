@@ -38,7 +38,7 @@ new class extends Component {
                             {{ __('Pemasukkan') }}
                         </x-nav-link>
 
-                        <x-nav-link :href="route('history')" :active="request()->routeIs('History')" wire:navigate>
+                        <x-nav-link :href="route('history')" :active="request()->routeIs('history')" wire:navigate>
                             {{ __('History') }}
                         </x-nav-link>
 

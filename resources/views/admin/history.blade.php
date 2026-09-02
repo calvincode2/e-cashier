@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('History') }}
+            {{ __('Order Histories') }}
         </h2>
     </x-slot>
 
@@ -10,11 +10,16 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                        </svg>
+                        <button type="button" onclick="window.location.reload()"
+                            class="border border-black rounded-lg p-1">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </button>
                     </div>
                     @foreach ($orders as $order)
                         <div x-data="{ open: false }" class="border border-gray-300 rounded-lg mb-3">
@@ -25,7 +30,8 @@
 
                                 <div class="text-left">
                                     <p class="font-semibold">
-                                        Order #{{ $order->kode_invoice }}
+                                        INFORMASI DETAIL ORDER #{{ $order->kode_invoice }}
+
                                     </p>
 
                                     <p class="text-sm text-gray-500">
@@ -48,7 +54,7 @@
                             <div x-show="open" x-collapse class="border-t border-gray-300 p-5">
 
                                 <h4 class="font-semibold underline mb-5">
-                                    INFORMASI DETAIL ORDER #{{ $order->kode_invoice }}
+                                    Order #{{ $order->kode_invoice }}
                                 </h4>
 
                                 {{-- PRODUK --}}
@@ -59,10 +65,8 @@
 
                                             <div>
                                                 <span class="font-medium">
-                                                    Product ID:
+                                                    {{ $detail->product->name }}
                                                 </span>
-
-                                                {{ $detail->product_id }}
 
                                                 <span class="text-gray-500">
                                                     ({{ $detail->quantity }}x)
@@ -86,12 +90,34 @@
 
                                     <div class="flex justify-between">
                                         <span class="font-medium">
-                                            Total Pembayaran
+                                            Total Harga
                                         </span>
 
                                         <span>
                                             Rp.
                                             {{ number_format($order->price, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <span class="font-medium">
+                                            Total Cash
+                                        </span>
+
+                                        <span>
+                                            Rp.
+                                            {{ number_format($order->cash, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <span class="font-medium">
+                                            Kembalian
+                                        </span>
+
+                                        <span>
+                                            Rp.
+                                            {{ number_format($order->cash - $order->price, 0, ',', '.') }}
                                         </span>
                                     </div>
 
@@ -110,8 +136,20 @@
                                             Tipe Order
                                         </span>
 
-                                        <span class="text-green-600">
+                                        <span
+                                            class={{ $order->type === 'website' ? 'text-green-600' : 'text-blue-600' }}>
                                             {{ $order->type }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <span class="font-medium">
+                                            Kasir
+                                        </span>
+
+                                        <span
+                                            class="{{ $order->type === 'website' ? 'text-gray-900' : 'text-gray-900' }}">
+                                            {{ $order->type === 'website' ? $order->user->name : $order->customer->company_name }}
                                         </span>
                                     </div>
 

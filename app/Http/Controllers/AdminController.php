@@ -296,7 +296,7 @@ class AdminController extends Controller
 
     public function historyPage()
     {
-        $orders = Order::with(["orderDetail"])->get();
+        $orders = Order::with(["orderDetail.product", 'user', 'customer'])->get();
         return view("admin.history", compact('orders'));
     }
 }
